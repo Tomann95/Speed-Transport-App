@@ -1,0 +1,66 @@
+@model Speed.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Subscription Plans";
+    var isSubscribed = Model.SubscriptionType != "None" && Model.SubscriptionExpiry > DateTime.Now;
+}
+
+<div class="container text-center">
+    <h1 class="my-5">Upgrade Your Logistics Experience</h1>
+
+    @if (isSubscribed)
+    {
+        <div class="alert alert-success">
+            <h3>You are Subscribed!</h3>
+            <p>Plan: <strong>@Model.SubscriptionType</strong></p>
+            <p>Expires: @Model.SubscriptionExpiry?.ToShortDateString()</p>
+            <p>Thank you for supporting Speed.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-center">
+            <!-- Quarterly Plan -->
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Quarterly</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">$49 <small class="text-muted">/ 3 mo</small></h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>Advanced Cargo Tools</li>
+                            <li>Priority Support</li>
+                            <li>Ad-free Dashboard</li>
+                        </ul>
+                         <form asp-action="Subscribe" method="post">
+                             <input type="hidden" name="type" value="Quarterly" />
+                             <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Sign up</button>
+                         </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annual Plan -->
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm border-primary">
+                    <div class="card-header text-white bg-primary">
+                        <h4 class="my-0 font-weight-normal">Annual</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">$149 <small class="text-muted">/ yr</small></h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li><strong>Best Value</strong> (Save 25%)</li>
+                            <li>All Quarterly Features</li>
+                            <li>Early Access to Features</li>
+                        </ul>
+                        <form asp-action="Subscribe" method="post">
+                             <input type="hidden" name="type" value="Annual" />
+                             <button type="submit" class="btn btn-lg btn-block btn-primary">Subscribe Now</button>
+                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,29 @@
+@model IEnumerable<Speed.Models.AdditionalService>
+
+@{
+    ViewData["Title"] = "Manage Services";
+}
+
+<h1>Manage Additional Services</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Price.ToString("C")</td>
+            <td>
+                <a asp-action="EditService" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<a asp-action="Index" class="btn btn-secondary">Back to Dashboard</a>

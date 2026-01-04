@@ -1,0 +1,190 @@
+@{
+    ViewData["Title"] = "Cargo Space Planner";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar / Toolbox -->
+        <div class="col-md-3 bg-light p-4 border-end">
+            <h3>Toolbox</h3>
+            <p>Select items to load:</p>
+            
+            <div class="d-grid gap-3">
+                <button class="btn btn-outline-primary cargo-btn" data-type="pallet" data-w="80" data-h="120" data-color="#8B4513">
+                    <i class="bi bi-box-seam"></i> Euro Pallet (120x80)
+                </button>
+                <button class="btn btn-outline-warning cargo-btn" data-type="carton" data-w="40" data-h="30" data-color="#FFA500">
+                    <i class="bi bi-box"></i> Carton (40x30)
+                </button>
+                <button class="btn btn-outline-secondary cargo-btn" data-type="drum" data-w="60" data-h="60" data-color="#708090">
+                    <i class="bi bi-bucket"></i> Drum (60x60)
+                </button>
+                <button class="btn btn-outline-success cargo-btn" data-type="longbox" data-w="200" data-h="50" data-color="#228B22">
+                    <i class="bi bi-hr"></i> Long Crate (200x50)
+                </button>
+            </div>
+
+            <hr class="my-4"/>
+            
+            <h4>Stats</h4>
+            <ul class="list-group" id="statsList">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Items Count
+                    <span class="badge bg-primary rounded-pill" id="itemCount">0</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Used Area
+                    <span class="badge bg-secondary rounded-pill" id="usedArea">0%</span>
+                </li>
+            </ul>
+
+            <div class="mt-4 d-grid gap-2">
+                <button class="btn btn-danger" onclick="resetLoad()">Reset Load</button>
+                <button class="btn btn-success" onclick="optimizeLoad()">Mock Auto-Pack</button>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="col-md-9 p-4 text-center bg-white">
+            <h2>Visual Load Planner</h2>
+            <p class="text-muted">Vehicle Bed: Standard Truck (13.6m x 2.45m)</p>
+            
+            <div class="d-inline-block border border-3 border-dark position-relative bg-light" style="width: 800px; height: 300px; overflow: hidden;">
+                <canvas id="plannerCanvas" width="800" height="300"></canvas>
+            </div>
+            
+            <div class="mt-3 text-muted">
+                <small>* Mock-up: Click items to add. Logic simply stacks them for demo.</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const canvas = document.getElementById('plannerCanvas');
+        const ctx = canvas.getContext('2d');
+        let items = [];
+        
+        // Truck Dimensions mapping (1m = ~50px)
+        // 13.6m -> 680px (approx 800 for visual space)
+        // 2.45m -> 122px (approx 300 height container)
+        
+        // Simply visual scaling
+        const scale = 3.5; // px per cm
+
+        document.querySelectorAll('.cargo-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                addItem(
+                    btn.getAttribute('data-type'),
+                    parseInt(btn.getAttribute('data-w')),
+                    parseInt(btn.getAttribute('data-h')),
+                    btn.getAttribute('data-color')
+                );
+            });
+        });
+
+        function addItem(type, w, h, color) {
+            const item = {
+                id: Date.now(),
+                type: type,
+                w: w * 0.5, // Scale down visual
+                h: h * 0.5,
+                color: color,
+                x: 0,
+                y: 0
+            };
+            
+            // Simple Packing Logic (Next Fit)
+            // Just find first spot or stack? For MOCKUP, just flow like text.
+            
+            let placed = false;
+            // Start positions
+            let x = 10;
+            let y = 10;
+            let rowH = 0;
+
+            // Simple re-calc all positions on add (dumb layout engine)
+            items.push(item);
+            recalcLayout();
+            draw();
+            updateStats();
+        }
+
+        function recalcLayout() {
+            let x = 10;
+            let y = 10;
+            let rowMaxH = 0;
+            const containerW = 800;
+
+            items.forEach(it => {
+                if (x + it.w > containerW) {
+                    x = 10;
+                    y += rowMaxH + 10;
+                    rowMaxH = 0;
+                }
+                it.x = x;
+                it.y = y;
+                
+                if (it.h > rowMaxH) rowMaxH = it.h;
+                
+                x += it.w + 5; // padding
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw Grid
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for(let i=0; i<canvas.width; i+=50) {
+                ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            }
+            for(let i=0; i<canvas.height; i+=50) {
+                ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width, i); ctx.stroke();
+            }
+
+            // Draw Items
+            items.forEach(it => {
+                ctx.fillStyle = it.color;
+                ctx.fillRect(it.x, it.y, it.w, it.h);
+                
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(it.x, it.y, it.w, it.h);
+
+                // Label
+                ctx.fillStyle = '#fff';
+                ctx.font = '10px Arial';
+                ctx.fillText(it.type.substring(0,3).toUpperCase(), it.x + 2, it.y + 12);
+            });
+        }
+
+        function resetLoad() {
+            items = [];
+            draw();
+            updateStats();
+        }
+        
+        function optimizeLoad() {
+            alert("Simulating AI Optimization... (Items sorted by size)");
+            items.sort((a,b) => (b.w * b.h) - (a.w * a.h));
+            recalcLayout();
+            draw();
+        }
+
+        function updateStats() {
+            document.getElementById('itemCount').textContent = items.length;
+            // Mock area calculation
+            let area = 0;
+            items.forEach(i => area += (i.w * i.h));
+            const total = canvas.width * canvas.height; // just mock container size
+            const pct = Math.round((area / (total * 0.4)) * 100); // assume 40% usable usage visually
+            document.getElementById('usedArea').textContent = Math.min(pct, 100) + "%";
+        }
+
+        // Init
+        draw();
+    </script>
+}

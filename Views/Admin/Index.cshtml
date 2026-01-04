@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container">
+    <h1 class="my-4">Admin Dashboard</h1>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Vehicles</h5>
+                    <p class="card-text">Update vehicle details, cargo capacity, and prices per km.</p>
+                    <a asp-action="Vehicles" class="btn btn-primary">Go to Vehicles</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Services</h5>
+                    <p class="card-text">Update additional service offerings and their fixed prices.</p>
+                    <a asp-action="Services" class="btn btn-primary">Go to Services</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+             <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Content Management</h5>
+                    <p class="card-text">Manage website content.</p>
+                    <a asp-controller="Content" asp-action="Index" class="btn btn-primary">Manage Content</a>
+                </div>
+            </div>
+        </div>
+
+         <div class="col-md-6 mb-4">
+             <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Inquiries</h5>
+                    <p class="card-text">View logistics inquiries.</p>
+                     <a asp-controller="Inquiry" asp-action="Index" class="btn btn-primary">View Inquiries</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+@model Speed.Models.Inquiry
+
+@{
+    ViewData["Title"] = "Inquiry Details";
+}
+
+<div class="container">
+    <h1>Inquiry Details</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <strong>Subject:</strong> @Model.Subject
+            <span class="float-end text-muted">@Model.CreatedAt</span>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">From: @Model.Email</h5>
+            <p class="card-text">@Model.Message</p>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <a href="mailto:@Model.Email" class="btn btn-primary">Reply via Email</a>
+        </div>
+    </div>
+</div>

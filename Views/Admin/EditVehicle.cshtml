@@ -1,0 +1,44 @@
+@model Speed.Models.Vehicle
+
+@{
+    ViewData["Title"] = "Edit Vehicle";
+}
+
+<h1>Edit Vehicle: @Model.Name</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditVehicle">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+             <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+             <div class="form-group mb-3">
+                <label asp-for="PricePerKm" class="control-label"></label>
+                <input asp-for="PricePerKm" class="form-control" />
+                <span asp-validation-for="PricePerKm" class="text-danger"></span>
+            </div>
+            
+             <div class="form-group mb-3">
+                <label asp-for="CargoCapacityKg" class="control-label"></label>
+                <input asp-for="CargoCapacityKg" class="form-control" />
+                <span asp-validation-for="CargoCapacityKg" class="text-danger"></span>
+            </div>
+            <!-- Other fields omitted for brevity but can be added -->
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Vehicles" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

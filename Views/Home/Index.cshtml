@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm glass-card mt-4">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold text-primary mb-3">Welcome to Speed</h1>
+            <p class="col-md-8 fs-4 mx-auto text-secondary">
+                The ultimate logistics calculator for modern transport. 
+                Plan shipments, calculate costs, and manage your cargo with precision.
+            </p>
+            <div class="mt-4 d-flex justify-content-center flex-wrap gap-3">
+                <a class="btn btn-primary btn-lg px-4" asp-controller="Calculator" asp-action="Index">
+                    <i class="bi bi-calculator"></i> Start Calculating
+                </a>
+                <a class="btn btn-outline-primary btn-lg px-4" asp-controller="Subscription" asp-action="Index">
+                    <i class="bi bi-star"></i> View Plans
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row align-items-md-stretch mt-5">
+        <div class="col-md-4">
+             <div class="h-100 p-4 bg-white rounded-3 shadow-sm card hover-effect">
+                 <div class="display-4 text-primary mb-3"><i class="bi bi-truck"></i></div>
+                <h2>Smart Calculator</h2>
+                <p>Instant price estimation based on vehicle type, distance, and cargo specifications. Real-time visual feedback.</p>
+                <a class="btn btn-outline-secondary" asp-controller="Calculator" asp-action="Index">Go to Calculator</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100 p-4 bg-white rounded-3 shadow-sm card hover-effect">
+                 <div class="display-4 text-warning mb-3"><i class="bi bi-box-seam"></i></div>
+                <h2>Visual Planner</h2>
+                <p>Drag and drop your cargo onto a virtual truck bed. Optimize space and ensure everything fits before you book.</p>
+                <a class="btn btn-outline-secondary" asp-controller="CargoPlanner" asp-action="Index">Try Planner</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="h-100 p-4 bg-white rounded-3 shadow-sm card hover-effect">
+                 <div class="display-4 text-success mb-3"><i class="bi bi-shield-check"></i></div>
+                <h2>Premium Services</h2>
+                <p>Unlock exclusive features, priority support, and advanced tools with our Quarterly and Annual subscriptions.</p>
+                <a class="btn btn-outline-secondary" asp-controller="Subscription" asp-action="Index">Upgrade Now</a>
+            </div>
+        </div>
+    </div>
+</div>

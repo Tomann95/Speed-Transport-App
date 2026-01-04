@@ -1,0 +1,31 @@
+@model IEnumerable<Speed.Models.Vehicle>
+
+@{
+    ViewData["Title"] = "Manage Vehicles";
+}
+
+<h1>Manage Vehicles</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Capacity (kg)</th>
+            <th>Price/Km</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.CargoCapacityKg</td>
+            <td>@item.PricePerKm.ToString("C")</td>
+            <td>
+                <a asp-action="EditVehicle" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<a asp-action="Index" class="btn btn-secondary">Back to Dashboard</a>

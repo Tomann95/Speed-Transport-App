@@ -1,0 +1,366 @@
+@model Speed.Models.TransportRequest
+
+@{
+    ViewData["Title"] = "Transport Calculator";
+    var vehicles = ViewBag.Vehicles as List<Speed.Models.Vehicle>;
+    var services = ViewBag.AdditionalServices as List<Speed.Models.AdditionalService>;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Transport Calculator</h1>
+    <p>Select your vehicle, dates, and services to get a quote.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Calculate" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <h4>1. Dates & Route</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="LoadingDate" class="control-label">Loading Date</label>
+                        <input asp-for="LoadingDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="LoadingDate" class="text-danger"></span>
+                    </div>
+                     <div class="col-md-6 mb-3">
+                        <label asp-for="UnloadingDate" class="control-label">Unloading Date</label>
+                        <input asp-for="UnloadingDate" class="form-control" type="date" value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="UnloadingDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="LoadingCountry" class="control-label">Loading Country</label>
+                        <select asp-for="LoadingCountry" class="form-control" id="LoadingCountry">
+                            <option value="PL">Poland</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="GB">United Kingdom</option>
+                        </select>
+                    </div>
+                     <div class="col-md-6 mb-3">
+                        <label asp-for="UnloadingCountry" class="control-label">Unloading Country</label>
+                         <select asp-for="UnloadingCountry" class="form-control" id="UnloadingCountry">
+                            <option value="PL">Poland</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="GB">United Kingdom</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="LoadingAddress" class="control-label">Loading Address</label>
+                    <input asp-for="LoadingAddress" class="form-control" placeholder="City, Street" />
+                    <span asp-validation-for="LoadingAddress" class="text-danger"></span>
+                </div>
+                 <div class="form-group mb-3">
+                    <label asp-for="UnloadingAddress" class="control-label">Unloading Address</label>
+                    <input asp-for="UnloadingAddress" class="form-control" placeholder="City, Street" />
+                    <span asp-validation-for="UnloadingAddress" class="text-danger"></span>
+                </div>
+
+                <hr />
+                <h4>2. Cargo Details</h4>
+                <div class="row">
+                     <div class="col-md-6 mb-3">
+                        <label asp-for="ShipmentType" class="control-label">Type</label>
+                        <select asp-for="ShipmentType" class="form-control" id="ShipmentType">
+                            <option value="Pallet">Euro Pallet (120x80)</option>
+                            <option value="Carton">Standard Box (40x30)</option>
+                            <option value="Bulk">Bulk / Loose</option>
+                        </select>
+                        <span asp-validation-for="ShipmentType" class="text-danger"></span>
+                    </div>
+                     <div class="col-md-6 mb-3">
+                        <label asp-for="Quantity" class="control-label">Quantity</label>
+                        <input asp-for="Quantity" class="form-control" type="number" min="1" value="1" />
+                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                    </div>
+                </div>
+
+            <h4>3. Select Vehicle</h4>
+            <div class="row mb-3">
+                @if (vehicles != null)
+                {
+                    @foreach (var v in vehicles)
+                    {
+                        <div class="col-md-4 text-center">
+                            <div class="card h-100 p-3 shadow-sm vehicle-card">
+                                <div class="mb-3 text-primary">
+                                    @if(v.Name.Contains("Van")) { <i class="bi bi-truck-flatbed display-4"></i> }
+                                    else if(v.Name.Contains("Semi")) { <i class="bi bi-truck-front display-4"></i> }
+                                    else { <i class="bi bi-truck display-4"></i> }
+                                </div>
+
+                                <h5 class="card-title">@v.Name</h5>
+                                <p class="card-text text-muted small">@v.Description</p>
+                                <h4 class="text-success mb-3">@v.PricePerKm.ToString("C") <small class="text-muted">/km</small></h4>
+                                
+                                <div class="form-check d-flex justify-content-center">
+                                    <input class="form-check-input me-2" type="radio" asp-for="SelectedVehicleId" value="@v.Id" id="vehicle_@v.Id" checked="@(Model?.SelectedVehicleId == v.Id)">
+                                    <label class="form-check-label fw-bold" for="vehicle_@v.Id">Select</label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No vehicles available.</p>
+                }
+            </div>
+
+            <h4>4. Additional Services</h4>
+            <div class="mb-3">
+                 @if (ViewBag.Services != null)
+                {
+                    foreach (var s in ViewBag.Services as List<Speed.Models.AdditionalService>)
+                    {
+                         <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="SelectedServiceIds" value="@s.Id" id="service_@s.Id" 
+                            @(Model?.SelectedServiceIds?.Contains(s.Id) == true ? "checked" : "")>
+                            <label class="form-check-label" for="service_@s.Id">
+                                @s.Name (+@s.Price.ToString("C"))
+                            </label>
+                        </div>
+                    }
+                }
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100">Calculate Cost</button>
+        </form>
+    </div>
+
+    <div class="col-md-4">
+        <div class="sticky-top" style="top: 20px;">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h3>Summary</h3>
+                    <div id="costSummary">
+                         @if (ViewBag.EstimatedCost != null)
+                        {
+                            <h2 class="text-success">Total: @(((decimal)ViewBag.EstimatedCost).ToString("C"))</h2>
+                            <small class="text-muted">Calculated from server.</small>
+                        }
+                        else
+                        {
+                             <h2 class="text-success" id="dynamicCost">$0.00</h2>
+                             <small class="text-muted">Live Estimate</small>
+                        }
+                    </div>
+                    
+                    <hr />
+                    <h5>Load Preview</h5>
+                    <canvas id="loadCanvas" width="300" height="400" style="border: 1px solid #ccc; background: #fff; width: 100%;"></canvas>
+                    <div id="capacityWarning" class="alert alert-danger mt-2" style="display:none;">
+                        <strong>Warning:</strong> Vehicle Overload!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Data from Server
+        const vehicles = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(vehicles));
+        const services = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(services));
+
+        // Elements
+        const loadingDateInput = document.getElementById('LoadingDate');
+        const unloadingDateInput = document.getElementById('UnloadingDate');
+        const quantityInput = document.getElementById('Quantity');
+        const shipmentTypeInput = document.getElementById('ShipmentType');
+        
+        const loadingAddrInput = document.getElementById('LoadingAddress');
+        const unloadingAddrInput = document.getElementById('UnloadingAddress');
+        
+        const loadingCountryInput = document.getElementById('LoadingCountry');
+        const unloadingCountryInput = document.getElementById('UnloadingCountry');
+        
+        const costDisplay = document.getElementById('dynamicCost');
+        const routeBadge = document.getElementById('routeBadge');
+        
+        const canvas = document.getElementById('loadCanvas');
+        const ctx = canvas.getContext('2d');
+        const warningBox = document.getElementById('capacityWarning');
+
+        // State
+        let selectedVehicleId = @(Model?.SelectedVehicleId ?? (vehicles != null && vehicles.Count > 0 ? vehicles[0].Id : 0));
+        let selectedServices = [];
+
+        // Listeners
+        document.querySelectorAll('input[name="SelectedVehicleId"]').forEach(r => {
+            r.addEventListener('change', (e) => {
+                selectedVehicleId = parseInt(e.target.value);
+                updatePreview();
+            });
+        });
+
+        document.querySelectorAll('input[name="SelectedServiceIds"]').forEach(c => {
+            c.addEventListener('change', (e) => {
+                const id = parseInt(e.target.value);
+                if (e.target.checked) selectedServices.push(id);
+                else selectedServices = selectedServices.filter(s => s !== id);
+                updatePreview();
+            });
+        });
+
+        // Add listeners to all relevant inputs
+        [loadingDateInput, unloadingDateInput, quantityInput, shipmentTypeInput, 
+         loadingAddrInput, unloadingAddrInput, loadingCountryInput, unloadingCountryInput].forEach(el => {
+            if(el) el.addEventListener('input', updatePreview);
+            if(el) el.addEventListener('change', updatePreview); // ensure select change is caught
+        });
+
+        function updatePreview() {
+            calculateCost();
+            drawLoad();
+            validateDatesClient();
+        }
+
+        function validateDatesClient() {
+            const load = new Date(loadingDateInput.value);
+            const unload = new Date(unloadingDateInput.value);
+            const now = new Date();
+
+            // Simple check: Load >= Today (approx), Unload >= Load
+            // (In real app, strip time component properly)
+            
+            if (unload < load) {
+                unloadingDateInput.classList.add('is-invalid');
+            } else {
+                unloadingDateInput.classList.remove('is-invalid');
+            }
+        }
+
+        function calculateCost() {
+            const vehicle = vehicles.find(v => v.Id === selectedVehicleId);
+            if (!vehicle) return;
+
+            // Mock Distance: Use length of address strings as specific "distance" seed + 500 base
+            let dist = 500;
+            if (loadingAddrInput.value && unloadingAddrInput.value) {
+                dist += (loadingAddrInput.value.length + unloadingAddrInput.value.length) * 2;
+            }
+
+            let cost = dist * vehicle.PricePerKm;
+            
+            // International Surcharge Logic
+            const loadC = loadingCountryInput.value;
+            const unloadC = unloadingCountryInput.value;
+            
+            if (loadC !== unloadC) {
+                cost *= 1.2; // 20% Surcharge
+                if(routeBadge) {
+                    routeBadge.textContent = "International Route (+20%)";
+                    routeBadge.className = "badge bg-warning text-dark mb-2";
+                }
+            } else {
+                if(routeBadge) {
+                    routeBadge.textContent = "Local Route";
+                    routeBadge.className = "badge bg-success mb-2";
+                }
+            }
+
+            // Services
+            selectedServices.forEach(sid => {
+                const s = services.find(srv => srv.Id === sid);
+                if (s) cost += s.Price;
+            });
+
+            costDisplay.innerText = '$' + cost.toFixed(2);
+        }
+
+        function drawLoad() {
+            // clear
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const vehicle = vehicles.find(v => v.Id === selectedVehicleId);
+            if (!vehicle) return;
+
+            // Draw Vehicle Bed (Scaled)
+            const scale = 350 / 15.0; 
+            
+            const vWidth = vehicle.WidthMeters * scale * 2; 
+            const vLength = vehicle.LengthMeters * scale;
+            
+            const startX = (canvas.width - vWidth) / 2;
+            const startY = 20;
+
+            // Bed
+            ctx.fillStyle = '#ddd';
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.fillRect(startX, startY, vWidth, vLength);
+            ctx.strokeRect(startX, startY, vWidth, vLength);
+
+            // Cab (visual only)
+            ctx.fillStyle = '#333';
+            ctx.fillRect(startX, startY - 20, vWidth, 20);
+
+            // Draw Cargo
+            const type = shipmentTypeInput.value;
+            const qty = parseInt(quantityInput.value) || 0;
+            
+            // Cargo Dimensions & Color (Dynamic)
+            let cWidth = 0.8; 
+            let cLength = 1.2;
+            let color = '#8B4513'; // SaddleBrown (Pallet)
+
+            if (type === 'Carton') {
+                cWidth = 0.4; cLength = 0.3; color = '#FFA500'; // Orange (Carton)
+            } else if (type === 'Bulk') {
+                 // visualize as fill
+                ctx.fillStyle = 'rgba(30, 144, 255, 0.5)'; // DodgerBlue (Bulk)
+                const fillPercent = Math.min(qty / 100, 1); 
+                ctx.fillRect(startX, startY, vWidth, vLength * fillPercent);
+                return;
+            }
+
+            // Simple Packing Algorithm (Grid)
+            const itemW = cWidth * scale * 2;
+            const itemH = cLength * scale;
+            
+            let currentX = startX;
+            let currentY = startY;
+            let itemsFit = 0;
+
+            ctx.fillStyle = color;
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i < qty; i++) {
+                if (currentY + itemH > startY + vLength) {
+                    break; // No more space length-wise
+                }
+
+                ctx.fillRect(currentX + 2, currentY + 2, itemW - 4, itemH - 4);
+                ctx.strokeRect(currentX + 2, currentY + 2, itemW - 4, itemH - 4);
+                itemsFit++;
+
+                currentX += itemW;
+                if (currentX + itemW > startX + vWidth) {
+                    currentX = startX;
+                    currentY += itemH;
+                }
+            }
+
+            if (itemsFit < qty) {
+                warningBox.style.display = 'block';
+                warningBox.innerText = `Warning: Only ${itemsFit} / ${qty} fit!`;
+            } else {
+                 warningBox.style.display = 'none';
+            }
+        }
+
+        // Init
+        updatePreview();
+    </script>
+}

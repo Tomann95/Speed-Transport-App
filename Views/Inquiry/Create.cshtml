@@ -1,0 +1,48 @@
+@model Speed.Models.Inquiry
+
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="container mt-5">
+    <h1>Contact Us</h1>
+    <p class="lead">Have a question about our logistics services? Send us a message.</p>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="Subject" class="control-label"></label>
+                    <input asp-for="Subject" class="form-control" placeholder="E.g., Quote for large shipment" />
+                    <span asp-validation-for="Subject" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                
+                 <div class="form-group mb-3">
+                    <label asp-for="Message" class="control-label"></label>
+                    <textarea asp-for="Message" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Message" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Send Message" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="p-4 bg-light rounded">
+                <h4>Other Ways to Reach Us</h4>
+                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                <p><strong>Email:</strong> support@speedLogistics.com</p>
+                <p><strong>Address:</strong> 123 Transport Lane, Logistics City</p>
+            </div>
+        </div>
+    </div>
+</div>
