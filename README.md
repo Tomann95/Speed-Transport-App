@@ -1,11 +1,5 @@
+
 Aplikacja do planowania transportu krajowego i międzynarodowego
-
-
-
-
-
-
-https://github.com/user-attachments/assets/71f24f16-e1dc-4369-8689-d9388df55495
 
 
 
