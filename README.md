@@ -18,11 +18,11 @@ https://youtube.com/shorts/c-33-1vnh40?si=Mn0B5QZFc0t3Ut2u
 
 
 
-1.3)Kalkulator musi mieć rozbudowaną funkcję wyboru punktów załadunku oraz rozładunku minimum po jednym
+1.3)Kalkulator ma rozbudowaną funkcję wyboru punktów załadunku oraz rozładunku minimum po jednym
 
 
 
-1.4)Kalkulator musi mieć możliwość wyboru specjalistycznego pojazdu w postaci grafiki.
+1.4)Kalkulator ma możliwość wyboru specjalistycznego pojazdu w postaci grafiki.
 
 
 
@@ -74,7 +74,7 @@ https://youtube.com/shorts/c-33-1vnh40?si=Mn0B5QZFc0t3Ut2u
 
 
 
-3.1) Zaprogramowanie makiety stworzonej przez grafika do administrowania przestrzenią ładunkowa poszczególnych pojazdów
+3.1) Zaprogramowanie makiety do administrowania przestrzenią ładunkowa poszczególnych pojazdów
 
 
 
