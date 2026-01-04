@@ -4,6 +4,12 @@ Aplikacja do planowania transportu krajowego i międzynarodowego
 
 
 
+https://youtube.com/shorts/c-33-1vnh40?si=Mn0B5QZFc0t3Ut2u
+
+
+
+
+
 1.2)Użytkownik może dodawać datę i godzinę załadunku oraz datę i godzinę rozładunku.
 
 
