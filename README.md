@@ -3,6 +3,10 @@ Aplikacja do planowania transportu krajowego i międzynarodowego
 
 
 
+<img width="946" height="436" alt="Speed" src="https://github.com/user-attachments/assets/ae5dcec5-0bb4-4517-852a-964a40f14abd" />
+
+
+
 
 https://youtube.com/shorts/c-33-1vnh40?si=Mn0B5QZFc0t3Ut2u
 
